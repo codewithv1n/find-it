@@ -11,7 +11,6 @@ function sendMessage() {
     chatBox.appendChild(userMessage);
   }
 
-  // Check if user selected an image
   if (imageInput.files.length > 0) {
     const file = imageInput.files[0];
     const reader = new FileReader();
