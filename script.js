@@ -1,39 +1,38 @@
-function sendMessage() {
-  const inputBox = document.getElementById("user-input");
-  const imageInput = document.getElementById("image-input");
-  const message = inputBox.value.trim();
-  const chatBox = document.getElementById("chat-box");
+function createPost() {
+  const text = document.getElementById("postText").value.trim();
+  const fileInput = document.getElementById("imageUpload");
+  const postFeed = document.getElementById("postFeed");
+  const file = fileInput.files[0];
 
-  if (message !== "") {
-    const userMessage = document.createElement("div");
-    userMessage.className = "message user-message";
-    userMessage.textContent = message;
-    chatBox.appendChild(userMessage);
+  // Don't post if text and image are both empty
+  if (!text && !file) {
+    alert("Please write something or add a photo.");
+    return;
   }
 
-  if (imageInput.files.length > 0) {
-    const file = imageInput.files[0];
-    const reader = new FileReader();
+  const postDiv = document.createElement("div");
+  postDiv.classList.add("post");
 
+  if (text) {
+    const postText = document.createElement("p");
+    postText.textContent = text;
+    postDiv.appendChild(postText);
+  }
+
+  if (file) {
+    const reader = new FileReader();
     reader.onload = function (e) {
       const img = document.createElement("img");
       img.src = e.target.result;
-      img.style.maxWidth = "200px";
-      img.style.display = "block";
-      img.style.marginTop = "10px";
-
-      const imageMessage = document.createElement("div");
-      imageMessage.className = "message user-message";
-      imageMessage.appendChild(img);
-      chatBox.appendChild(imageMessage);
-
-      chatBox.scrollTop = chatBox.scrollHeight;
+      postDiv.appendChild(img);
+      postFeed.prepend(postDiv);
     };
-
     reader.readAsDataURL(file);
+  } else {
+    postFeed.prepend(postDiv);
   }
 
-  inputBox.value = "";
-  imageInput.value = "";
-  chatBox.scrollTop = chatBox.scrollHeight;
+  // Clear input
+  document.getElementById("postText").value = "";
+  fileInput.value = "";
 }

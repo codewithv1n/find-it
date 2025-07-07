@@ -17,20 +17,10 @@
       </ul>
     </div>
 
-    <div class="chat-container">
-      <div id="chat-box" class="chat-box"></div>
-      <div class="input-area">
-        <input type="text" id="user-input" placeholder="Type your message" />
-        <input
-          type="file"
-          id="image-input"
-          accept="image/*"
-          style="display: none"
-        />
-
-        <label for="image-input" class="img-btn">📷</label>
-        <button onclick="sendMessage()">Send</button>
-      </div>
+    <div class="post-box">
+      <textarea id="postText" placeholder="What's on your mind?"></textarea>
+      <input type="file" id="imageUpload" accept="image/*" />
+      <button onclick="createPost()">Post</button>
     </div>
   </body>
 </html>
