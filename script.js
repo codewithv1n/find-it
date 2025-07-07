@@ -18,9 +18,9 @@ function sendMessage() {
     reader.onload = function (e) {
       const img = document.createElement("img");
       img.src = e.target.result;
-      img.style.maxWidth = "150px";
+      img.style.maxWidth = "200px";
       img.style.display = "block";
-      img.style.marginTop = "5px";
+      img.style.marginTop = "10px";
 
       const imageMessage = document.createElement("div");
       imageMessage.className = "message user-message";
