@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>POSTED</title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="script.js"></script>
   </head>
   <body>
     <div class="sidebar">
@@ -17,6 +16,35 @@
       </ul>
     </div>
 
-    <div class="post-feed" id="postFeed"></div>
+    <div id="postFeed"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const postData = JSON.parse(localStorage.getItem("latestPost"));
+        const postFeed = document.getElementById("postFeed");
+
+        if (!postData) {
+          postFeed.innerHTML = "<p>No post found.</p>";
+          return;
+        }
+
+        const postDiv = document.createElement("div");
+        postDiv.className = "post";
+
+        if (postData.text) {
+          const text = document.createElement("p");
+          text.textContent = postData.text;
+          postDiv.appendChild(text);
+        }
+
+        if (postData.image) {
+          const img = document.createElement("img");
+          img.src = postData.image;
+          postDiv.appendChild(img);
+        }
+
+        postFeed.appendChild(postDiv);
+      });
+    </script>
   </body>
 </html>

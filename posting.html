@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>POSTING</title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="script.js"></script>
   </head>
   <body>
     <div class="sidebar">
@@ -17,10 +16,14 @@
       </ul>
     </div>
 
-    <div class="post-box">
-      <textarea id="postText" placeholder="What's on your mind?"></textarea>
-      <input type="file" id="imageUpload" accept="image/*" />
-      <button onclick="createPost()">Post</button>
+    <div class="container">
+      <h2>Create a Post</h2>
+      <textarea id="postText" placeholder="What's on your mind?"></textarea
+      ><br />
+      <input type="file" id="imageUpload" accept="image/*" /><br />
+      <button id="postBtn">Post</button>
     </div>
+
+    <script src="script.js"></script>
   </body>
 </html>
