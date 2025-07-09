@@ -29,3 +29,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const postData = JSON.parse(localStorage.getItem("latestPost"));
+  const postFeed = document.getElementById("postFeed");
+
+  if (!postData) {
+    postFeed.innerHTML = "<p>No post found.</p>";
+    return;
+  }
+
+  const postDiv = document.createElement("div");
+  postDiv.className = "post";
+
+  if (postData.text) {
+    const text = document.createElement("p");
+    text.textContent = postData.text;
+    postDiv.appendChild(text);
+  }
+
+  if (postData.image) {
+    const img = document.createElement("img");
+    img.src = postData.image;
+    postDiv.appendChild(img);
+  }
+
+  postFeed.appendChild(postDiv);
+});
