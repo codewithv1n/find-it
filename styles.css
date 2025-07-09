@@ -34,11 +34,16 @@ body {
   padding: 20px;
 }
 
+/*all hover*/
 a:hover {
   background-color: lightgray;
   transition: 2s ease;
   border-radius: 5px;
   padding: 5px;
+}
+
+button:hover {
+  background-color: #0f65d2;
 }
 
 /*Announcement Section*/
@@ -54,6 +59,7 @@ a:hover {
   border-radius: 12px;
   box-shadow: 0 0 2px solid black;
 }
+/**/
 
 .home-section {
   margin-left: 300px;
