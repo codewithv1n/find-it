@@ -1,3 +1,4 @@
+// for posting
 document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("postBtn");
 
@@ -30,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// for posted
 document.addEventListener("DOMContentLoaded", () => {
   const postData = JSON.parse(localStorage.getItem("latestPost"));
   const postFeed = document.getElementById("postFeed");
