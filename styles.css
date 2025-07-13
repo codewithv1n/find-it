@@ -46,6 +46,9 @@ button:hover {
   background-color: #0f65d2;
 }
 
+.search-button:hover {
+  background-color: #45a049;
+}
 /*Announcement Section*/
 .ann-section h1 {
   text-align: center;
@@ -146,4 +149,41 @@ button:hover {
   max-width: 100%;
   margin-top: 10px;
   margin-left: 700px;
+}
+
+/*ABOUT SECTION*/
+.about-footer h1 {
+  margin-top: 650px;
+  max-width: 500px;
+}
+
+/*SEARCH SECTION*/
+.search-section {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 10px;
+  border-radius: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 300px;
+  margin-left: 650px;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  padding: 10px 15px;
+  border-radius: 30px 0 0 30px;
+  font-size: 16px;
+}
+
+.search-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 0 30px 30px 0;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
