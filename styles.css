@@ -133,18 +133,18 @@ button {
   transition: background-color 0.3s ease;
 }
 
-.post {
-  max-width: 500px;
+.postFeed {
+  max-width: 400px;
   margin: 70px auto;
   background: #f0f0f0;
-  padding: 15px;
+  padding: 10px;
   border-radius: 10px;
-  margin-left: 700px;
+  margin-left: 100px;
 }
 .post img {
-  max-width: 100%;
-  margin-top: 10px;
-  margin-left: 700px;
+  max-width: 40%;
+  margin-top: 90px;
+  margin-left: 500px;
 }
 
 /*ABOUT SECTION*/
