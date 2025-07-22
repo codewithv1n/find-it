@@ -167,6 +167,7 @@ button {
   transition: background-color 0.3s ease;
 }
 
+/*POSTED SECTION*/
 #postFeed {
   max-width: 900px;
   margin: 70px auto;
