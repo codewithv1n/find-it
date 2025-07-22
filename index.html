@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
     <link rel="icon" href="images/logo/favicon.png" type="image/png" />
     <title>LAF System</title>
   </head>
@@ -13,7 +13,7 @@
       <ul>
         <li><a href="#" onclick="showSection('home')">🏠 Home</a></li>
         <li><a href="#" onclick="showSection('search')">🔍 Search</a></li>
-        <li><a href="#posted" onclick="showSection('posted')">📋 Posted</a></li>
+        <li><a href="#" onclick="showSection('posted')">📋 Posted</a></li>
         <li><a href="#" onclick="showSection('posting')">➕ Posting</a></li>
         <li><a href="#" onclick="showSection('about')">ℹ️ About</a></li>
       </ul>
@@ -23,15 +23,9 @@
       <div class="ann-section">
         <h1>HELLO THIS IS ANNOUNCEMENT SECTION</h1>
       </div>
-      <div class="ann-text">
-        <p>
-          "We built this system to help people find their missing love ones and
-          things this system<br />brings you a easier to use and realtime
-          updates."
-        </p>
-        <div class="ann-image">
-          <img src="images/announcement.jpg" alt="announcement" />
-        </div>
+
+      <div class="ann-image">
+        <img src="images/announcement.jpg" alt="announcement" />
       </div>
     </section>
 
@@ -68,12 +62,6 @@
       </div>
     </section>
 
-    <section id="posted">
-      <div id="postFeed"></div>
-
-      <script src="script.js" defer></script>
-    </section>
-
     <section id="posting">
       <div class="posting-container">
         <h2>Create a Post</h2>
@@ -82,8 +70,10 @@
         <input type="file" id="imageUpload" accept="image/*" /><br />
         <button id="postBtn">Post</button>
       </div>
+    </section>
 
-      <script src="script.js"></script>
+    <section id="posted">
+      <div id="postFeed"></div>
     </section>
 
     <section id="about">

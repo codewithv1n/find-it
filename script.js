@@ -1,69 +1,55 @@
-// for posting
 document.addEventListener("DOMContentLoaded", () => {
-  const button = document.getElementById("postBtn");
+  window.showSection = function (sectionId) {
+    const sections = document.querySelectorAll("section");
+    sections.forEach((section) => (section.style.display = "none"));
+    const active = document.getElementById(sectionId);
+    if (active) active.style.display = "block";
+  };
 
-  if (button) {
-    button.addEventListener("click", () => {
-      const text = document.getElementById("postText").value.trim();
-      const fileInput = document.getElementById("imageUpload");
-      const file = fileInput.files[0];
+  const postBtn = document.getElementById("postBtn");
+  const postText = document.getElementById("postText");
+  const imageUpload = document.getElementById("imageUpload");
+  const postFeed = document.getElementById("postFeed");
 
+  if (postBtn) {
+    postBtn.addEventListener("click", () => {
+      const text = postText.value.trim();
+      const file = imageUpload.files[0];
       if (!text && !file) {
-        alert("Please enter text or upload an image.");
+        alert("Enter text or upload image.");
         return;
       }
 
       const post = { text };
 
+      const displayPost = () => {
+        postFeed.innerHTML = "";
+        const postDiv = document.createElement("div");
+        if (post.text) {
+          const p = document.createElement("p");
+          p.textContent = post.text;
+          postDiv.appendChild(p);
+        }
+        if (post.image) {
+          const img = document.createElement("img");
+          img.src = post.image;
+          img.style.maxWidth = "300px";
+          postDiv.appendChild(img);
+        }
+        postFeed.appendChild(postDiv);
+        showSection("posted");
+      };
+
       if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
           post.image = e.target.result;
-          localStorage.setItem("latestPost", JSON.stringify(post));
-          window.location.href = "#posted";
+          displayPost();
         };
         reader.readAsDataURL(file);
       } else {
-        localStorage.setItem("latestPost", JSON.stringify(post));
-        window.location.href = "#posted";
+        displayPost();
       }
     });
   }
 });
-
-// for posted
-document.addEventListener("DOMContentLoaded", () => {
-  const postData = JSON.parse(localStorage.getItem("latestPost"));
-  const postFeed = document.getElementById("postFeed");
-
-  if (!postData) {
-    postFeed.innerHTML = "<p>No post found.</p>";
-    return;
-  }
-
-  const postDiv = document.createElement("div");
-  postDiv.className = "post";
-
-  if (postData.text) {
-    const text = document.createElement("p");
-    text.textContent = postData.text;
-    postDiv.appendChild(text);
-  }
-
-  if (postData.image) {
-    const img = document.createElement("img");
-    img.src = postData.image;
-    postDiv.appendChild(img);
-  }
-
-  postFeed.appendChild(postDiv);
-});
-
-// for sidebar navigation
-function showSection(id) {
-  document.querySelectorAll("section").forEach((sec) => {
-    sec.classList.remove("active");
-  });
-
-  document.getElementById(id).classList.add("active");
-}

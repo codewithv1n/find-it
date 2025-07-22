@@ -57,6 +57,9 @@ button:hover {
   background-color: black;
 }
 /*Announcement Section*/
+#announcement {
+  display: block;
+}
 .ann-section h1 {
   text-align: center;
   margin-left: 700px;
@@ -164,18 +167,31 @@ button {
   transition: background-color 0.3s ease;
 }
 
-.postFeed {
-  max-width: 400px;
+#postFeed {
+  max-width: 900px;
   margin: 70px auto;
   background: #f0f0f0;
   padding: 10px;
-  border-radius: 10px;
-  margin-left: 100px;
+  border-radius: 12px;
+  margin-left: 800px;
 }
 .post img {
-  max-width: 40%;
+  max-width: 100%;
   margin-top: 90px;
-  margin-left: 500px;
+  margin-left: 800px;
+}
+
+.post {
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.post p {
+  font-size: 18px;
+  color: #333;
+  margin: 10px 0;
 }
 
 /*ABOUT SECTION*/
