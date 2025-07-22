@@ -20,12 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
         reader.onload = function (e) {
           post.image = e.target.result;
           localStorage.setItem("latestPost", JSON.stringify(post));
-          window.location.href = "Posted.html";
+          window.location.href = "#posted";
         };
         reader.readAsDataURL(file);
       } else {
         localStorage.setItem("latestPost", JSON.stringify(post));
-        window.location.href = "Posted.html";
+        window.location.href = "#posted";
       }
     });
   }
@@ -58,3 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   postFeed.appendChild(postDiv);
 });
+
+// for sidebar navigation
+function showSection(id) {
+  document.querySelectorAll("section").forEach((sec) => {
+    sec.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+}
