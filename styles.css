@@ -59,15 +59,21 @@ button:hover {
 .login-container {
   display: block;
   margin-left: 580px;
-  margin-top: 80px;
+  margin-top: 100px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px 25px;
   border-radius: 15px;
   height: 45vh;
 }
 
-.login-container h2 {
-  color: #333;
+.login-container img {
+  width: 100px;
+  height: 100px;
+  border-radius: 10%;
+  margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .login-container input[type="text"],
@@ -80,10 +86,11 @@ button:hover {
   border-radius: 8px;
   font-size: 16px;
 }
-.login-container input[type="text"]:focus,
-.login-container input[type="password"]:focus {
-  border-color: gray;
-  outline: none;
+.login-container input[type="text"],
+.login-container input[type="password"],
+:focus {
+  border-color: black;
+  outline: auto;
 }
 
 .login-container button {
@@ -98,14 +105,25 @@ button:hover {
   width: 100%;
 }
 
+/*Sign Up Section*/
 .signup-container {
   display: block;
-  margin-left: 570px;
-  margin-top: 80px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-left: 580px;
+  margin-top: 100px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   padding: 20px 20px;
   border-radius: 15px;
-  height: 45vh;
+  height: 50vh;
+}
+
+.signup-container img {
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10%;
+  margin-bottom: 20px;
 }
 
 .signup-container input[type="text"],
@@ -121,9 +139,10 @@ button:hover {
 }
 .signup-container input[type="text"],
 .signup-container input[type="password"],
-.signup-container input[type="email"]:focus {
-  border-color: gray;
-  outline: none;
+.signup-container input[type="email"],
+:focus {
+  border-color: black;
+  outline: auto;
 }
 .signup-container button {
   background-color: black;
