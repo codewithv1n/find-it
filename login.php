@@ -1,10 +1,20 @@
 <?php
 session_start();
 include('db.php');
+$errorMsg = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
+
+    $username = trim($_POST["username"]);
+    $password = trim($_POST["password"]);
+
+    if ($username === "admin" && $password === "1234") {
+       
+    } else {
+        $errorMsg = "Invalid username or password";
+    }
 
     $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
@@ -19,13 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $id;
             header("Location: index.php");
             exit();
-        } else {
-            echo "Incorrect password.";
-        }
-    } else {
-        echo "Username not found.";
-    }
-
+        } 
+        
+      }    
     $stmt->close();
     $conn->close();
 }
@@ -45,10 +51,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <body>
 
     <form action="login.php" method="POST">
+      <?php if (!empty($errorMsg)): ?>
+     <div style="background-color:#f8d7da; color:#721c24; padding:10px; border-radius:5px; margin-bottom:15px; border: 1px solid #f5c6cb;">
+    <?php echo $errorMsg; ?>
+    </div>
+    <?php endif; ?>
       <div class="login-container">
       <img src="images/logo/logo.jpg" alt="logo" />
-      <input type="text" name="username" placeholder="Username" id="username" />
-      <input type="password" name="password" placeholder="Password" id="password" />
+      <input type="text" name="username" placeholder="Username" id="username">
+      <input type="password" name="password" placeholder="Password" id="password">
       <label>Don't have an account?<a href="signup.php">Sign Up</a></label>
       <button type="submit">Login</button>
     </div>
