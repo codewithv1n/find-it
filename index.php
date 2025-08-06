@@ -11,10 +11,10 @@ if (!isset($_SESSION['user_id'])) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="script.js" defer></script>
-    <link rel="icon" href="images/logo/favicon.png" type="image/png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" href="images/logo/favicon.png" type="image/png" />
+     <link rel="stylesheet" href="styles.css" />
+     <script src="script.js" defer></script>
     <title>LAF System</title>
   </head>
   <body>
@@ -26,6 +26,7 @@ if (!isset($_SESSION['user_id'])) {
     <li><a href="#" onclick="showSection('posted')"><i class="fas fa-file-alt"></i> Posted</a></li>
     <li><a href="#" onclick="showSection('posting')"><i class="fas fa-upload"></i> Posting</a></li>
     <li><a href="#" onclick="showSection('about')"><i class="fas fa-info-circle"></i> About</a></li>
+    <a href="login.php" class="logout-btn"> <i class="fas fa-sign-out-alt"></i> Logout</a>
   </ul>
 </div>
 
