@@ -58,8 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
       <div class="login-container">
       <img src="images/logo/logo.jpg" alt="logo" />
-      <input type="text" name="username" placeholder="Username" id="username">
-      <input type="password" name="password" placeholder="Password" id="password">
+      <input type="text" name="username" placeholder="Username" id="username" required>
+      <input type="password" name="password" placeholder="Password" id="password" required >
       <label>Don't have an account?<a href="signup.php">Sign Up</a></label>
       <button type="submit">Login</button>
     </div>
