@@ -1,3 +1,10 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
 section {
   display: none;
 }
@@ -7,11 +14,12 @@ section.active {
 }
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  color: #000;
 }
-
 .sidebar ul {
   list-style-type: none;
   padding: 0;
@@ -140,7 +148,6 @@ button:hover {
 }
 
 /*Sign Up Section*/
-/* Signup container */
 .signup-container {
   background: #fff;
   border: 1px solid #000;
@@ -149,8 +156,10 @@ button:hover {
   width: 100%;
   max-width: 350px;
   text-align: center;
-  align-items: center;
+  box-sizing: border-box;
+  margin-top: 50px;
 }
+
 /* Logo */
 .signup-container img {
   width: 80px;
@@ -161,7 +170,7 @@ button:hover {
   border: 1px solid #000;
 }
 
-/* Input fields */
+/* Inputs */
 .signup-container input {
   width: 100%;
   padding: 0.8rem;
@@ -170,9 +179,9 @@ button:hover {
   border-radius: 8px;
   background: #fff;
   color: #000;
-  outline: none;
   font-size: 0.95rem;
-  transition: background 0.3s, color 0.3s;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
 .signup-container input:focus {
@@ -191,7 +200,7 @@ button:hover {
   font-size: 1rem;
   margin-top: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .signup-container button:hover {
@@ -200,7 +209,7 @@ button:hover {
   border: 1px solid #000;
 }
 
-/* Text and link */
+/* Label and link */
 .signup-container label {
   display: block;
   margin-top: 1rem;
@@ -217,14 +226,7 @@ button:hover {
 .signup-container a:hover {
   text-decoration: none;
 }
-/* Center everything */
-.center-wrapper {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-}
+
 
 /*Announcement Section*/
 .ann-image img {
