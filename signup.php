@@ -35,23 +35,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
-    
-    <script src="script.js"></script>
     <link rel="icon" href="images/logo/favicon.png" type="image/png" />
     <title>LAF System</title>
   </head>
   <body>
-    <form action="signup.php" method="POST">
-    <div class="signup-container">
-      <img src="images/logo/logo.jpg" alt="logo" />
-      <input type="text" name="username" placeholder="Username" id="signup-username" required/>
-      <input type="password" name="password" placeholder="Password" id="signup-password" required />
-      <input type="password" name="confirm_password" placeholder="Confirm Password" id="signup-confirm-password" required/>
-      <input type="email" name="email" placeholder="Email" id="signup-email" required/>
-      <label>Already have an account?<a href="login.php">Log in</a></label>
-      <button type="submit">Sign Up</button>
+    <div class="center-wrapper">
+      <form action="signup.php" method="POST" class="signup-container">
+        <img src="images/logo/logo.jpg" alt="logo" />
+        <input type="text" name="username" placeholder="Username" id="signup-username" required />
+        <input type="password" name="password" placeholder="Password" id="signup-password" required />
+        <input type="password" name="confirm_password" placeholder="Confirm Password" id="signup-confirm-password" required />
+        <input type="email" name="email" placeholder="Email" id="signup-email" required />
+        <label>Already have an account? <a href="login.php">Log in</a></label>
+        <button type="submit">Sign Up</button>
+      </form>
     </div>
-    </form>
-
   </body>
 </html>
+
