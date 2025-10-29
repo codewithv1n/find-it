@@ -53,3 +53,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+
+
+// notif
+function showNotification(message, type) {
+  const notif = document.getElementById('notif');
+  const msg = document.getElementById('notif-message');
+  const icon = notif.querySelector('.icon');
+
+  msg.textContent = message;
+
+  if (type === 'success') {
+    notif.className = 'notification success show';
+    icon.innerHTML = '<span style="font-size:16px;">&#10003;</span>'; // checkmark
+  } else {
+    notif.className = 'notification error show';
+    icon.innerHTML = '<span style="font-size:16px;">&#10005;</span>'; // X mark
+  }
+
+  // Auto hide after 3 seconds
+  setTimeout(() => {
+    notif.classList.remove('show');
+  }, 3000);
+}
+
+// Run automatically if PHP passed a message
+if (typeof notif !== 'undefined' && notif.trim() !== '') {
+  const [type, message] = notif.split(':');
+  showNotification(message, type);
+}
