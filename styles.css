@@ -100,7 +100,7 @@ button:hover {
 
 /* Centered container */
 .login-container {
-  background: #fff;
+  background: #758A93;
   border: 1px solid #000;
   padding: 2rem;
   border-radius: 12px;
@@ -136,10 +136,6 @@ button:hover {
   transition: all 0.3s ease;
 }
 
-.login-container input[type="text"]:focus,
-.login-container input[type="password"]:focus {
-  color: #fff;
-}
 
 /* Button */
 .login-container button {
@@ -181,7 +177,7 @@ button:hover {
 
 /*Sign Up Section*/
 .signup-container {
-  background: #fff;
+  background: #758A93;
   border: 1px solid #000;
   padding: 2rem;
   border-radius: 12px;
@@ -215,9 +211,6 @@ button:hover {
   transition: all 0.3s ease;
 }
 
-.signup-container input:focus {
-  color: #fff;
-}
 
 /* Button */
 .signup-container button {
