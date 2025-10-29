@@ -1,6 +1,8 @@
 <?php
 include('db.php');
 
+$notif = ''; // notification flag
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $email = $_POST['email'];
@@ -8,26 +10,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $confirm = $_POST['confirm_password'];
 
     if ($password !== $confirm) {
-        echo "Passwords do not match!";
-        exit();
-    }
-
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-    $stmt = $conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $hashed_password, $email);
-
-    if ($stmt->execute()) {
-        echo "Signup successful!";
+        $notif = 'error:Passwords do not match!';
     } else {
-        echo "Error: " . $stmt->error;
-    }
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $username, $hashed_password, $email);
 
-    $stmt->close();
-    $conn->close();
+        if ($stmt->execute()) {
+            $notif = 'success:Signup successful!';
+        } else {
+            $notif = 'error:' . addslashes($stmt->error);
+        }
+
+        $stmt->close();
+        $conn->close();
+    }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,6 +49,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Sign Up</button>
       </form>
     </div>
+
+  
+    <div id="notif" class="notification">
+      <div class="icon"></div>
+      <span id="notif-message"></span>
+    </div>
+
+   
+    <script>
+      const notif = "<?php echo $notif; ?>";
+    </script>
+
+    
+    <script src="script.js"></script>
   </body>
 </html>
-
