@@ -14,7 +14,7 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" href="images/logo/favicon.png" type="image/png" />
      <link rel="stylesheet" href="styles.css" />
-     <script src="script.js" defer></script>
+     <script src="script.js"></script>
     <title>LAF System</title>
   </head>
   <body>
@@ -92,7 +92,5 @@ if (!isset($_SESSION['user_id'])) {
         <footer><h1>All rights reserve 2025</h1></footer>
       </div>
     </section>
-
-    
   </body>
 </html>
