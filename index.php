@@ -92,5 +92,7 @@ if (!isset($_SESSION['user_id'])) {
         <footer><h1>All rights reserve 2025</h1></footer>
       </div>
     </section>
+
+    
   </body>
 </html>
