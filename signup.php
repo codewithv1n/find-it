@@ -1,7 +1,7 @@
 <?php
 include('db.php');
 
-$notif = ''; // notification flag
+$notif = ''; 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
