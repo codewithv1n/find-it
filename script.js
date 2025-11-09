@@ -66,10 +66,10 @@ function showNotification(message, type) {
 
   if (type === 'success') {
     notif.className = 'notification success show';
-    icon.innerHTML = '<span style="font-size:16px;">&#10003;</span>'; // checkmark
+    icon.innerHTML = '<span style="font-size:16px;">&#10003;</span>'; 
   } else {
     notif.className = 'notification error show';
-    icon.innerHTML = '<span style="font-size:16px;">&#10005;</span>'; // X mark
+    icon.innerHTML = '<span style="font-size:16px;">&#10005;</span>'; 
   }
 
   // Auto hide after 3 seconds
