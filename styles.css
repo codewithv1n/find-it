@@ -1,8 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+  font-family:"Poppins", sans-serif;
 }
 
 section {
@@ -374,17 +377,6 @@ button:hover {
 }
 
 
-/*Announcement Section*/
-.ann-image img {
-  display: block;
-  margin-top: 80px;
-  border-radius: 12px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 0 2px solid black;
-}
-/**/
-
 /*for sidebar and main text*/
 .home-section {
   margin-left: 300px;
@@ -411,27 +403,123 @@ button:hover {
   padding: 30px;
 }
 
-/*HOME SECTION*/
+/* ===== HOME SECTION ===== */
+#home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 20px;
+  background: linear-gradient(to right, #f9fafb, #eef2f7);
+  min-height: 100vh;
+}
+
+.home-section {
+  text-align: center;
+  max-width: 1000px;
+}
+
+.home-section h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
+
+.home-section p {
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 50px;
+}
+
+/* ===== FEATURES CARDS ===== */
 .features {
   display: flex;
-  gap: 20px;
+  justify-content: center;
+  gap: 25px;
   flex-wrap: wrap;
+  margin-bottom: 60px;
 }
 
 .card {
-  background-color: #f1f2f6;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  flex: 1 1 250px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  width: 280px;
+  transition: all 0.3s ease;
+  text-align: left;
 }
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
 .card h3 {
+  color: #0077ff;
+  font-weight: 600;
+  font-size: 1.2rem;
   margin-bottom: 10px;
-  color: blue;
 }
 
 .card p {
   color: #444;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* ===== ANNOUNCEMENT IMAGE ===== */
+.ann-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ann-image img {
+  width: 100%;
+  max-width: 700px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.ann-image img:hover {
+  transform: scale(1.02);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .home-section h1 {
+    font-size: 1.8rem;
+  }
+
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 90%;
+  }
+}
+
+/* ===== FADE IN ANIMATION ===== */
+.home-section h1 {
+  animation: fadeInDown 0.9s ease-in-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /*POSTING SECTION*/
