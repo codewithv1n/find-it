@@ -1,61 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-  window.showSection = function (sectionId) {
-    const sections = document.querySelectorAll("section");
-    sections.forEach((section) => (section.style.display = "none"));
-    const active = document.getElementById(sectionId);
-    if (active) active.style.display = "block";
-  };
-
-  const postBtn = document.getElementById("postBtn");
-  const postText = document.getElementById("postText");
-  const imageUpload = document.getElementById("imageUpload");
-  const postFeed = document.getElementById("postFeed");
-
-  if (postBtn) {
-    postBtn.addEventListener("click", () => {
-      const text = postText.value.trim();
-      const file = imageUpload.files[0];
-      if (!text && !file) {
-        alert("Enter text or upload image.");
-        return;
-      }
-
-      const post = { text };
-
-      const displayPost = () => {
-        postFeed.innerHTML = "";
-        const postDiv = document.createElement("div");
-        if (post.text) {
-          const p = document.createElement("p");
-          p.textContent = post.text;
-          postDiv.appendChild(p);
-        }
-        if (post.image) {
-          const img = document.createElement("img");
-          img.src = post.image;
-          img.style.maxWidth = "300px";
-          postDiv.appendChild(img);
-        }
-        postFeed.appendChild(postDiv);
-        showSection("posted");
-      };
-
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          post.image = e.target.result;
-          displayPost();
-        };
-        reader.readAsDataURL(file);
-      } else {
-        displayPost();
-      }
-    });
-  }
-});
-
-
-
 // notif
 function showNotification(message, type) {
   const notif = document.getElementById('notif');
@@ -78,8 +20,49 @@ function showNotification(message, type) {
   }, 3000);
 }
 
-// Run automatically if PHP passed a message
-if (typeof notif !== 'undefined' && notif.trim() !== '') {
-  const [type, message] = notif.split(':');
-  showNotification(message, type);
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const links = document.querySelectorAll(".sidebar ul li a");
+  const sections = document.querySelectorAll("section");
+
+  // Default: show home
+  let activeSection = localStorage.getItem("activeSection") || "home";
+  showSection(activeSection);
+
+  links.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = link.getAttribute("href").replace("#", "");
+      showSection(target);
+      localStorage.setItem("activeSection", target);
+    });
+  });
+
+  function showSection(id) {
+    sections.forEach((s) => s.classList.remove("active"));
+    document.getElementById(id)?.classList.add("active");
+
+    links.forEach((l) => l.classList.remove("active"));
+    document
+      .querySelector(`a[href="#${id}"]`)
+      ?.classList.add("active");
+  }
+
+  // Image Preview
+  const imageUpload = document.getElementById("imageUpload");
+  const imagePreview = document.getElementById("imagePreview");
+
+  if (imageUpload) {
+    imageUpload.addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          imagePreview.innerHTML = `<img src="${reader.result}" alt="Preview">`;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        imagePreview.innerHTML = `<p>No image selected</p>`;
+      }
+    });
+  }
+});
