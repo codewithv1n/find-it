@@ -9,12 +9,12 @@
 
 body {
   display: flex;
-  flex-direction: column; /* stack login at signup vertically */
-  justify-content: center; /* vertical center */
-  align-items: center; /* horizontal center */
-  min-height: 100vh; /* full viewport height */
-  margin: 0; /* remove default margin */
-  background: #f0f0f0; /* optional background color */
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
+  min-height: 100vh; 
+  margin: 0; 
+  background: #f0f0f0; 
   font-family: Arial, sans-serif;
 }
 
@@ -337,7 +337,7 @@ textarea {
 .custom-button {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #0084ff; /* Messenger blue */
+  background-color: #0084ff; 
   color: white;
   border-radius: 5px;
   cursor: pointer;
