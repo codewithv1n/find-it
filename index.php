@@ -31,7 +31,7 @@ if (!isset($_SESSION['user_id'])) {
         <li><a href="#posting"><i class="fas fa-upload"></i> Posting</a></li>
         <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
       </ul>
-      <a href="logout.php" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      <a href="login.php" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
 
     <!-- Home -->
