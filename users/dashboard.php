@@ -1,375 +1,414 @@
 <?php
 session_start();
-include('../controllers/connect_db.php');
+include ('../controllers/connect_db.php');
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
-}
+} 
 
-$isAdmin = ($_SESSION['user_id'] === 'admin');
-$userName = '';
-
-// Fetch user info (if regular user)
-if (!$isAdmin) {
-    $stmt = $conn->prepare("SELECT username FROM users WHERE id = ?");
-    $stmt->bind_param("i", $_SESSION['user_id']);
-    $stmt->execute();
-    $stmt->bind_result($userName);
-    $stmt->fetch();
-    $stmt->close();
-}
-
-// Get statistics from database
-function getStats($conn) {
-    $stats = ['lost' => 0, 'found' => 0, 'users' => 0, 'resolved' => 0];
-
-    // Lost items count
-    $result = $conn->query("SELECT COUNT(*) as cnt FROM items WHERE type='lost'");
-    if ($result) {
-        $row = $result->fetch_assoc();
-        $stats['lost'] = $row['cnt'];
-    }
-
-    // Found items count
-    $result = $conn->query("SELECT COUNT(*) as cnt FROM items WHERE type='found'");
-    if ($result) {
-        $row = $result->fetch_assoc();
-        $stats['found'] = $row['cnt'];
-    }
-
-    // Users count (excluding admin)
-    $result = $conn->query("SELECT COUNT(*) as cnt FROM users WHERE id != 'admin'");
-    if ($result) {
-        $row = $result->fetch_assoc();
-        $stats['users'] = $row['cnt'];
-    }
-
-    // Resolved items (assuming resolved = items with status 'resolved' or matched)
-    $result = $conn->query("SELECT COUNT(*) as cnt FROM items WHERE status='resolved'");
-    if ($result) {
-        $row = $result->fetch_assoc();
-        $stats['resolved'] = $row['cnt'];
-    }
-
-    return $stats;
-}
-
-$stats = getStats($conn);
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Find It — Dashboard</title>
-  <link rel="icon" href="images/logo/favicon.png" type="image/png" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Find-IT - Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f2f2f2; color: #333; font-size: 14px; }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 { font-size: 18px; }
+    header span { font-size: 12px; color: #aaa; }
+
+    .container { padding: 20px; max-width: 1100px; margin: 0 auto; }
+
+    .stats {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      flex: 1;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 14px 18px;
+    }
+    .stat-card .label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .stat-card .number { font-size: 26px; font-weight: bold; }
+    .stat-card.blue .number { color: #2980b9; }
+    .stat-card.orange .number { color: #e67e22; }
+    .stat-card.green .number { color: #27ae60; }
+    .stat-card.gray .number { color: #7f8c8d; }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .toolbar input[type="text"] {
+      padding: 7px 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      width: 220px;
+      font-size: 13px;
+    }
+    .toolbar select {
+      padding: 7px 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 13px;
+      margin-left: 8px;
+    }
+    .toolbar button {
+      padding: 7px 16px;
+      background: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .toolbar button:hover { background: #34495e; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    thead { background: #ecf0f1; }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; }
+    th { font-weight: bold; color: #555; font-size: 12px; text-transform: uppercase; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .badge.lost { background: #fdecea; color: #c0392b; }
+    .badge.found { background: #e9f7ef; color: #1e8449; }
+    .badge.claimed { background: #eaf4fb; color: #2471a3; }
+
+    .action-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      border: 1px solid #ccc;
+      background: white;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-right: 4px;
+    }
+    .action-btn:hover { background: #f0f0f0; }
+    .action-btn.claim { border-color: #27ae60; color: #27ae60; }
+    .action-btn.delete { border-color: #e74c3c; color: #e74c3c; }
+
+    /* Modal */
+    .modal-bg {
+      display: none;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      justify-content: center; align-items: center;
+      z-index: 100;
+    }
+    .modal-bg.active { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 5px;
+      padding: 24px;
+      width: 400px;
+      border: 1px solid #ccc;
+    }
+    .modal h2 { font-size: 16px; margin-bottom: 16px; }
+    .modal label { display: block; font-size: 12px; margin-bottom: 4px; color: #555; }
+    .modal input, .modal select, .modal textarea {
+      width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 3px;
+      margin-bottom: 12px; font-size: 13px; font-family: Arial, sans-serif;
+    }
+    .modal textarea { resize: vertical; height: 70px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+    .modal-actions button {
+      padding: 7px 16px; font-size: 13px; border-radius: 3px; cursor: pointer;
+    }
+    .btn-cancel { background: white; border: 1px solid #ccc; color: #333; }
+    .btn-save { background: #2c3e50; color: white; border: none; }
+    .btn-save:hover { background: #34495e; }
+
+   .logout-btn {
+      padding: 7px 16px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .logout-btn:hover { background: #c0392b; }
+
+    .empty-msg { text-align: center; padding: 30px; color: #aaa; font-size: 13px; }
+  </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <div class="sidebar-brand">
-    <img src="images/logo/logo.jpg" alt="Find It logo" />
-    <h2>Find It.</h2>
-    <span>Lost &amp; Found System</span>
+<header>
+  <h1>FIND IT</h1>
+  <span id="date-display"></span>
+
+  <div class="user-actions">
+    <button onclick="logout()" class="logout-btn">Logout</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="stats">
+    <div class="stat-card blue">
+      <div class="label">Total Items</div>
+      <div class="number" id="stat-total">0</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="label">Lost</div>
+      <div class="number" id="stat-lost">0</div>
+    </div>
+    <div class="stat-card green">
+      <div class="label">Found</div>
+      <div class="number" id="stat-found">0</div>
+    </div>
+    <div class="stat-card gray">
+      <div class="label">Claimed</div>
+      <div class="number" id="stat-claimed">0</div>
+    </div>
   </div>
 
-  <div class="nav-label">Menu</div>
-  <nav>
-    <ul>
-      <li><a href="#" class="nav-link active" data-section="home"><i class="fas fa-house"></i> Home</a></li>
-      <li><a href="#" class="nav-link" data-section="search"><i class="fas fa-magnifying-glass"></i> Search</a></li>
-      <li><a href="#" class="nav-link" data-section="posted"><i class="fas fa-layer-group"></i> Posted Items</a></li>
-      <li><a href="#" class="nav-link" data-section="posting"><i class="fas fa-plus-circle"></i> Create Post</a></li>
-      <li><a href="#" class="nav-link" data-section="about"><i class="fas fa-circle-info"></i> About</a></li>
-    </ul>
-  </nav>
-
-  <div class="sidebar-user">
-    <div class="user-avatar">
-      <?php echo $isAdmin ? 'A' : strtoupper(substr($userName ?: (string)$_SESSION['user_id'], 0, 1)); ?>
+  <div class="toolbar">
+    <div>
+      <input type="text" id="search-input" placeholder="Search item or location..." oninput="renderTable()" />
+      <select id="filter-status" onchange="renderTable()">
+        <option value="">All Status</option>
+        <option value="Lost">Lost</option>
+        <option value="Found">Found</option>
+        <option value="Claimed">Claimed</option>
+      </select>
     </div>
-    <div class="user-info">
-      <strong><?php echo $isAdmin ? 'Admin' : htmlspecialchars($userName ?: 'User'); ?></strong>
-      <span><?php echo $isAdmin ? 'Administrator' : 'Member'; ?></span>
-    </div>
+    <button onclick="openModal()">+ Add Item</button>
   </div>
 
-  <a href="logout.php" class="logout-btn">
-    <i class="fas fa-arrow-right-from-bracket"></i> Sign Out
-  </a>
-</div>
-
-<!-- MAIN CONTENT -->
-<div class="main">
-
-  <div class="topbar">
-    <span class="topbar-title" id="topbarTitle">Home</span>
-    <span class="topbar-badge"><i class="fas fa-circle" style="font-size:0.45rem;"></i>&nbsp; Live</span>
-  </div>
-
-  <!-- HOME SECTION -->
-  <section id="home" class="active">
-    <div class="page-header">
-      <h1>Welcome back, <?php echo $isAdmin ? 'Admin' : htmlspecialchars($userName ?: 'User'); ?> 👋</h1>
-      <p>Here's what's happening on the Find It platform today.</p>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-icon" style="background:var(--accent-dim);color:var(--accent);"><i class="fas fa-triangle-exclamation"></i></div>
-        <div class="stat-value"><?php echo $stats['lost']; ?></div>
-        <div class="stat-label">Lost Reports</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon" style="background:var(--green-dim);color:var(--green);"><i class="fas fa-circle-check"></i></div>
-        <div class="stat-value"><?php echo $stats['found']; ?></div>
-        <div class="stat-label">Found Items</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon" style="background:var(--blue-dim);color:var(--blue);"><i class="fas fa-users"></i></div>
-        <div class="stat-value"><?php echo $stats['users']; ?></div>
-        <div class="stat-label">Users</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon" style="background:#fef9e7;color:#b7860d;"><i class="fas fa-handshake"></i></div>
-        <div class="stat-value"><?php echo $stats['resolved']; ?></div>
-        <div class="stat-label">Resolved</div>
-      </div>
-    </div>
-
-    <div class="content-card">
-      <p style="font-size:0.88rem;color:var(--ink-mid);line-height:1.75;margin-bottom:18px;">
-        <strong style="color:var(--ink-dark);">Find It</strong> helps people reconnect with their lost belongings and loved ones.
-        Post what you've lost or found, search community reports, and make a difference.
-      </p>
-      <div class="features">
-        <div class="feature-card">
-          <div class="f-icon" style="background:var(--accent-dim);color:var(--accent);"><i class="fas fa-magnifying-glass"></i></div>
-          <h3>Search Reports</h3>
-          <p>Browse all lost and found reports instantly in one place.</p>
-        </div>
-        <div class="feature-card">
-          <div class="f-icon" style="background:var(--green-dim);color:var(--green);"><i class="fas fa-bullhorn"></i></div>
-          <h3>Post Found Items</h3>
-          <p>Help someone — post what you've found right away.</p>
-        </div>
-        <div class="feature-card">
-          <div class="f-icon" style="background:var(--blue-dim);color:var(--blue);"><i class="fas fa-bolt"></i></div>
-          <h3>Real-Time Updates</h3>
-          <p>Posts go live instantly so anyone nearby can act fast.</p>
-        </div>
-      </div>
-      <div class="ann-image">
-        <img src="images/announcement.jpg" alt="Announcement" />
-      </div>
-    </div>
-  </section>
-
-  <!-- SEARCH SECTION -->
-  <section id="search">
-    <div class="page-header">
-      <h1>Search</h1>
-      <p>Find lost or found item reports from the community.</p>
-    </div>
-    <div class="content-card">
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="e.g. black wallet, brown dog, iPhone…" />
-        <button id="searchBtn"><i class="fas fa-magnifying-glass"></i> Search</button>
-      </div>
-      <div class="search-results" id="searchResults"></div>
-    </div>
-  </section>
-
-  <!-- CREATE POST SECTION -->
-  <section id="posting">
-    <div class="page-header">
-      <h1>Create a Post</h1>
-      <p>Report something lost or log something you've found.</p>
-    </div>
-    <div class="content-card">
-      <div class="post-form">
-        <form id="postForm" class="form-grid">
-          <div class="field-group">
-            <label>Post Type</label>
-            <div class="type-toggle">
-              <button type="button" class="type-btn sel-lost" id="btnLost" onclick="setType('lost')">
-                <i class="fas fa-triangle-exclamation"></i> Lost
-              </button>
-              <button type="button" class="type-btn" id="btnFound" onclick="setType('found')">
-                <i class="fas fa-circle-check"></i> Found
-              </button>
-            </div>
-            <input type="hidden" id="postType" value="lost" />
-          </div>
-
-          <div class="field-group">
-            <label for="postTitle">Title</label>
-            <input type="text" id="postTitle" placeholder="e.g. Lost black leather wallet near SM…" required />
-          </div>
-
-          <div class="field-group">
-            <label for="postText">Description</label>
-            <textarea id="postText" placeholder="Color, brand, location, date — the more detail the better." required></textarea>
-          </div>
-
-          <div class="field-group">
-            <label>Photo (optional)</label>
-            <label for="imageUpload" class="upload-area">
-              <i class="fas fa-cloud-arrow-up"></i>
-              <p>Drag & drop or <span>browse files</span></p>
-              <p style="font-size:0.71rem;margin-top:3px;">PNG, JPG up to 5 MB</p>
-            </label>
-            <input type="file" id="imageUpload" accept="image/*" style="display:none;" />
-            <div id="imagePreview"></div>
-          </div>
-
-          <div>
-            <button type="submit" class="btn-post">
-              <i class="fas fa-paper-plane"></i> Publish Post
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- POSTED ITEMS SECTION -->
-  <section id="posted">
-    <div class="page-header">
-      <h1>Posted Items</h1>
-      <p>All active lost and found reports from the community.</p>
-    </div>
-    <div class="content-card">
-      <div id="postFeed" class="post-feed">
-        <div class="empty-state">
-          <i class="fas fa-inbox"></i>
-          <p>No posts yet. Be the first to create one!</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT SECTION -->
-  <section id="about">
-    <div class="page-header">
-      <h1>About</h1>
-      <p>Learn more about this project.</p>
-    </div>
-    <div class="content-card">
-      <div class="about-grid">
-        <div class="about-block">
-          <h3>What is Find It?</h3>
-          <p>Find It is a community-driven Lost &amp; Found platform designed to help people quickly report and discover missing items or persons. Posts go live instantly and are searchable by anyone.</p>
-        </div>
-        <div class="about-block">
-          <h3>How it works</h3>
-          <p>Create a post tagged as "Lost" or "Found", describe the item with a photo, and the community can search and reach out to return or reclaim it.</p>
-        </div>
-      </div>
-
-      <div class="creator-chip">
-        <div class="creator-avatar">V</div>
-        <div class="creator-info">
-          <strong>Vinzel James Maraño</strong>
-          <span>BSIT – 31002 &nbsp;·&nbsp; Developer</span>
-        </div>
-      </div>
-
-      <div class="about-footer">All rights reserved &copy; 2025 &nbsp;·&nbsp; Find It System</div>
-    </div>
-  </section>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Item Name</th>
+        <th>Category</th>
+        <th>Location</th>
+        <th>Date</th>
+        <th>Reported By</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
 
 </div>
 
-<!-- JAVASCRIPT FOR INTERACTIVITY -->
+<!-- Modal -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h2 id="modal-title">Add Item</h2>
+    <label>Item Name</label>
+    <input type="text" id="f-name" placeholder="e.g. Black Wallet" />
+    <label>Category</label>
+    <select id="f-category">
+      <option>Electronics</option>
+      <option>Clothing</option>
+      <option>Accessories</option>
+      <option>Documents</option>
+      <option>Bag</option>
+      <option>Keys</option>
+      <option>Other</option>
+    </select>
+    <label>Location</label>
+    <input type="text" id="f-location" placeholder="e.g. Building A Lobby" />
+    <label>Reported By</label>
+    <input type="text" id="f-reporter" placeholder="Name of reporter" />
+    <label>Status</label>
+    <select id="f-status">
+      <option>Lost</option>
+      <option>Found</option>
+      <option>Claimed</option>
+    </select>
+    <label>Description (optional)</label>
+    <textarea id="f-desc" placeholder="Additional details..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveItem()">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  // Section switching
-  const sections = document.querySelectorAll('section');
-  const navLinks = document.querySelectorAll('.nav-link');
-  const topbarTitle = document.getElementById('topbarTitle');
+  let items = [
+    { id: 1, name: "Black Wallet", category: "Accessories", location: "Canteen", date: "2025-03-25", reporter: "Juan dela Cruz", status: "Lost" },
+    { id: 2, name: "iPhone 13", category: "Electronics", location: "Library 2F", date: "2025-03-26", reporter: "Maria Santos", status: "Found" },
+    { id: 3, name: "Blue Umbrella", category: "Other", location: "Main Entrance", date: "2025-03-27", reporter: "Jose Reyes", status: "Claimed" },
+    { id: 4, name: "Student ID", category: "Documents", location: "Registrar", date: "2025-03-28", reporter: "Ana Lopez", status: "Found" },
+    { id: 5, name: "Car Keys", category: "Keys", location: "Parking Lot B", date: "2025-03-29", reporter: "Carlos Bautista", status: "Lost" },
+  ];
+  let nextId = 6;
+  let editingId = null;
 
-  function showSection(sectionId) {
-    sections.forEach(s => s.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
-    navLinks.forEach(link => link.classList.remove('active'));
-    document.querySelector(`.nav-link[data-section="${sectionId}"]`).classList.add('active');
-    topbarTitle.textContent = document.querySelector(`.nav-link[data-section="${sectionId}"]`).textContent.trim();
+  document.getElementById("date-display").textContent = new Date().toLocaleDateString("en-PH", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
+  function updateStats() {
+    document.getElementById("stat-total").textContent = items.length;
+    document.getElementById("stat-lost").textContent = items.filter(i => i.status === "Lost").length;
+    document.getElementById("stat-found").textContent = items.filter(i => i.status === "Found").length;
+    document.getElementById("stat-claimed").textContent = items.filter(i => i.status === "Claimed").length;
   }
 
-  navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const section = link.dataset.section;
-      showSection(section);
+  function renderTable() {
+    const search = document.getElementById("search-input").value.toLowerCase();
+    const filter = document.getElementById("filter-status").value;
+    const tbody = document.getElementById("table-body");
+
+    let filtered = items.filter(i => {
+      const matchSearch = i.name.toLowerCase().includes(search) || i.location.toLowerCase().includes(search);
+      const matchStatus = filter === "" || i.status === filter;
+      return matchSearch && matchStatus;
     });
-  });
 
-  // Post type toggle
-  function setType(type) {
-    document.getElementById('postType').value = type;
-    const btnLost = document.getElementById('btnLost');
-    const btnFound = document.getElementById('btnFound');
-    if (type === 'lost') {
-      btnLost.classList.add('sel-lost');
-      btnFound.classList.remove('sel-lost');
-    } else {
-      btnFound.classList.add('sel-lost');
-      btnLost.classList.remove('sel-lost');
-    }
-  }
-
-  // Image upload preview
-  document.getElementById('imageUpload').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        const preview = document.getElementById('imagePreview');
-        preview.innerHTML = `<img src="${ev.target.result}" alt="Preview" style="max-width:200px; max-height:200px; margin-top:10px;">`;
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  // Search functionality (mock)
-  document.getElementById('searchBtn').addEventListener('click', function() {
-    const query = document.getElementById('searchInput').value.trim();
-    if (query === '') {
-      alert('Please enter a search term.');
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" class="empty-msg">No items found.</td></tr>`;
       return;
     }
-    // Simulate search results (replace with actual AJAX)
-    document.getElementById('searchResults').innerHTML = '<p>Searching...</p>';
-    setTimeout(() => {
-      document.getElementById('searchResults').innerHTML = '<p>No results found for "' + query + '".</p>';
-    }, 1000);
-  });
 
-  // Form submission (mock)
-  document.getElementById('postForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    alert('Post created successfully! (Demo mode)');
-    // Reset form
-    this.reset();
-    setType('lost');
-    document.getElementById('imagePreview').innerHTML = '';
-  });
+    tbody.innerHTML = filtered.map((item, idx) => `
+      <tr>
+        <td>${idx + 1}</td>
+        <td>${item.name}</td>
+        <td>${item.category}</td>
+        <td>${item.location}</td>
+        <td>${item.date}</td>
+        <td>${item.reporter}</td>
+        <td><span class="badge ${item.status.toLowerCase()}">${item.status}</span></td>
+        <td>
+          <button class="action-btn" onclick="editItem(${item.id})">Edit</button>
+          ${item.status !== "Claimed" ? `<button class="action-btn claim" onclick="markClaimed(${item.id})">Claim</button>` : ""}
+          <button class="action-btn delete" onclick="deleteItem(${item.id})">Delete</button>
+        </td>
+      </tr>
+    `).join("");
 
-  // Load posted items (mock)
-  function loadPostedItems() {
-    // This would be an AJAX call to fetch posts
-    const feed = document.getElementById('postFeed');
-    feed.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No posts yet. Be the first to create one!</p></div>';
+    updateStats();
   }
-  loadPostedItems();
+
+  function openModal(prefill = null) {
+    editingId = prefill ? prefill.id : null;
+    document.getElementById("modal-title").textContent = prefill ? "Edit Item" : "Add Item";
+    document.getElementById("f-name").value = prefill ? prefill.name : "";
+    document.getElementById("f-category").value = prefill ? prefill.category : "Electronics";
+    document.getElementById("f-location").value = prefill ? prefill.location : "";
+    document.getElementById("f-reporter").value = prefill ? prefill.reporter : "";
+    document.getElementById("f-status").value = prefill ? prefill.status : "Lost";
+    document.getElementById("f-desc").value = prefill ? (prefill.desc || "") : "";
+    document.getElementById("modal-bg").classList.add("active");
+  }
+
+  function closeModal() {
+    document.getElementById("modal-bg").classList.remove("active");
+    editingId = null;
+  }
+
+  function logout() {
+    if (confirm("Are you sure you want to logout?")) {
+      window.location.replace("../controllers/logout_process.php");
+    } 
+  }
+
+  async function logoutUser() {
+    const response = await fetch('logout.php');
+    
+    if (response.ok) {
+        // Kapag tapos na ang PHP, linisin ang UI o i-redirect
+        alert("Logged out successfully!");
+        window.location.replace("login.php");
+    }
+}
+
+  function saveItem() {
+    const name = document.getElementById("f-name").value.trim();
+    const location = document.getElementById("f-location").value.trim();
+    const reporter = document.getElementById("f-reporter").value.trim();
+    if (!name || !location || !reporter) { alert("Please fill in all required fields."); return; }
+
+    const item = {
+      id: editingId || nextId++,
+      name,
+      category: document.getElementById("f-category").value,
+      location,
+      reporter,
+      status: document.getElementById("f-status").value,
+      date: new Date().toISOString().split("T")[0],
+      desc: document.getElementById("f-desc").value.trim()
+    };
+
+    if (editingId) {
+      const idx = items.findIndex(i => i.id === editingId);
+      items[idx] = item;
+    } else {
+      items.push(item);
+    }
+
+    closeModal();
+    renderTable();
+  }
+
+  function editItem(id) {
+    const item = items.find(i => i.id === id);
+    if (item) openModal(item);
+  }
+
+  function markClaimed(id) {
+    const item = items.find(i => i.id === id);
+    if (item && confirm(`Mark "${item.name}" as Claimed?`)) {
+      item.status = "Claimed";
+      renderTable();
+    }
+  }
+
+  function deleteItem(id) {
+    const item = items.find(i => i.id === id);
+    if (item && confirm(`Delete "${item.name}"?`)) {
+      items = items.filter(i => i.id !== id);
+      renderTable();
+    }
+  }
+
+  document.getElementById("modal-bg").addEventListener("click", function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  renderTable();
 </script>
 
 </body>

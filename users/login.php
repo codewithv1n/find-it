@@ -2,57 +2,14 @@
 session_start();
 include('../controllers/connect_db.php');
 
-$errorMsg = "";
-$username = "";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
-
-    // Admin login
-    if ($username === "admin" && $password === "1234") {
-        $_SESSION['user_id'] = 'admin';
-        $_SESSION['username'] = 'admin';
-        header("Location: index.php");
-        exit();
-    }
-
-    // Regular user login
-    $errorMsg = authenticateUser($conn, $username, $password);
-}
-
-/**
- * Authenticate user credentials
- */
-function authenticateUser($conn, $username, $password) {
-    if (empty($username) || empty($password)) {
-        return "Please enter username and password.";
-    }
-
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->store_result();
-
-    if ($stmt->num_rows === 0) {
-        $stmt->close();
-        return "Invalid username or password.";
-    }
-
-    $stmt->bind_result($id, $hashed_password);
-    $stmt->fetch();
-    
-    if (password_verify($password, $hashed_password)) {
-        $_SESSION['user_id'] = $id;
-        $_SESSION['username'] = $username;
-        header("Location: dashboard.php");
-        exit();
-    }
-    
-    $stmt->close();
-    return "Invalid username or password.";
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit();
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,8 +23,9 @@ function authenticateUser($conn, $username, $password) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
+
 <body class="auth-card">
-  <!-- LEFT PANEL -->
+ 
   <div class="left-panel">
     <div class="dot-grid"></div>
     <div class="left-top">
@@ -106,53 +64,30 @@ function authenticateUser($conn, $username, $password) {
         </div>
       <?php endif; ?>
 
-      <form action="login.php" method="POST" novalidate>
+      <form action="../controllers/user_login_process.php" method="POST">
         <label class="field-label" for="username">Username</label>
         <div class="auth-field">
-          <input
-            type="text" id="username" name="username"
-            placeholder="Your username"
-            autocomplete="username"
-            value="<?php echo htmlspecialchars($username); ?>"
-            required
-          />
+          <input type="text" id="username" name="username" placeholder="Your username" autocomplete="username" required />
           <i class="fas fa-user f-icon"></i>
         </div>
 
         <label class="field-label" for="password">Password</label>
         <div class="auth-field">
-          <input
-            type="password" id="password" name="password"
-            placeholder="Your password"
-            autocomplete="current-password"
-            required
-          />
+          <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password" required />
           <i class="fas fa-lock f-icon"></i>
-          <button type="button" class="toggle-pw" onclick="togglePw('password','eyeIcon')" aria-label="Toggle password">
-            <i class="fas fa-eye" id="eyeIcon"></i>
-          </button>
         </div>
 
         <button type="submit" class="btn-auth">
-          Sign In &nbsp;<i class="fas fa-arrow-right"></i>
+          Sign In<i class="fas fa-arrow-right"></i>
         </button>
       </form>
 
       <div class="or-line">or</div>
       <p class="auth-footer">
-        Don't have an account?<a href="signup.php">Create one free</a>
+        Don't have an account?<a href="signup.php"> Sign up</a>
       </p>
     </div>
   </div>
 
-  <script>
-    function togglePw(id, iconId) {
-      const input = document.getElementById(id);
-      const icon = document.getElementById(iconId);
-      const isPassword = input.type === 'password';
-      input.type = isPassword ? 'text' : 'password';
-      icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
-    }
-  </script>
 </body>
 </html>
