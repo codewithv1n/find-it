@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ── SIDEBAR WRAPPER ── */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 240px;
+  background: #ffffff;
+  border-right: 1px solid #e8eaf0;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  z-index: 100;
+}
+
+/* ── BRAND TITLE ── */
+.sidebar h2 {
+  padding: 26px 24px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: 0.01em;
+  border-bottom: 1px solid #f0f2f7;
+}
+
+/* ── NAV LIST ── */
+.sidebar ul {
+  list-style: none;
+  padding: 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── NAV LINKS ── */
+.sidebar ul li a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebar ul li a:hover {
+  background: #f0f5ff;
+  color: #2563eb;
+}
+
+.sidebar ul li a.active {
+  background: #eff4ff;
+  color: #2563eb;
+  font-weight: 600;
+}
