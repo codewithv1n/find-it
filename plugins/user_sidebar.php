@@ -9,11 +9,18 @@
 <body>
  
 <div class="sidebar">
-    <h2>Lost & Found</h2>
+      
+   <div class="logo-container">
+    <img src="../images/logo/Find IT.png" alt="logo">
+   </div>
+
+
     <ul>
         <li><a href="dashboard.php">Dashboard</a></li>
         <li><a href="report_item.php">Report Item</a></li>
-        <li><a href="search.php">Search</a></li>
+        <li><a href="reports.php">Reported Items</a></li>
+        <li><a href="my_posts.php">My Posts</a></li>
+        <li><a href="about.php">About</a></li>
     </ul>
 </div>
 
