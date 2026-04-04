@@ -76,12 +76,23 @@ header h1 {
 
 .dashboard-card-1 h1 {
     font-family: 'Righteous', sans-serif; 
-    font-size: 35px;
+    font-size: 30px;
     text-transform: uppercase;
     margin: 0 0 10px 0; 
     color: #000;
     letter-spacing: 2px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
+
+.dashboard-card-1 h1 span {
+    font-weight: 500;
+    color: #000;
+    text-transform: lowercase;
+    font-family: 'Arial' , sans-serif;
+}
+
 
 
 .dashboard-card1-content {
@@ -89,7 +100,7 @@ header h1 {
     align-items: center; 
     gap: 30px; 
     color: #333;
-    font-family: 'Georgia', serif; 
+    font-family: 'Inria Sans', sans-serif; 
     font-size: 14px;
 }
 
@@ -109,7 +120,7 @@ header h1 {
 
 
 
- /* RECENT POSTING CARD */
+/* RECENT POSTING CARD */
 .recent-posting-card {
     background-color: #ffffff;
     padding: 25px;
@@ -171,13 +182,13 @@ header h1 {
 .posted-data-container {
     display: flex;
     flex-direction: column;
-    gap: 15px; 
+    gap: 16px; 
 }
 
 .posted-data {
     background-color: #d9d9d9; 
-    padding: 15px;
-    border-radius: 15px;
+    padding: 10px;
+    border-radius: 12px;
     position: relative; 
 }
 
@@ -201,7 +212,6 @@ header h1 {
     line-height: 1.4;
 }
 
-
 .posted-data::after {
     content: "1 minute ago";
     position: absolute;
@@ -209,4 +219,52 @@ header h1 {
     right: 15px;
     font-size: 11px;
     color: #555;
+}
+
+
+
+
+/* ANNOUNCEMENT SECTION */
+.announcement-card {
+    position: fixed;
+    background: #fff;
+    padding: 20px;
+    width: 40%;
+    height: 300px;
+    transform: translateY(-310px);
+    margin-left: 50px;
+    border-radius: 8px;
+}
+
+.announcement-header {
+    position: sticky;
+    margin: -20px -20px 5px -20px; 
+    padding: 20px 20px; 
+    box-shadow: 0px 3px 1px 0px #d9d9d9;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+    font-size: 1.2rem; 
+}
+
+.announcement-header i {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.announcement-header h4 {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'Inria Sans', sans-serif;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.announcement-img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px; 
+    display: block;
 }
